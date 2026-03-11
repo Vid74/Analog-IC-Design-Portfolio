@@ -1,0 +1,36 @@
+### DAC Settling Time Measurement
+
+The DAC output settling time was measured from the transient simulation waveform.
+
+The output transitions from approximately 1.45 V to 1.68 V when the digital input changes.
+
+The output begins changing at approximately 1.00 µs and reaches its steady-state value at approximately 1.05 µs.
+
+Settling time:
+
+t_settle = 1.05 µs − 1.00 µs
+t_settle ≈ 50 ns
+
+The circuit includes an RC output filter with:
+
+R = 1 kΩ
+C = 55 pF
+
+The theoretical time constant is
+
+Vinitial ≈ 1.45 V
+Vfinal ≈ 1.68 V
+      ΔV=1.68−1.45
+      Δ𝑉=0.23𝑉
+
+ t_start ≈ 1.00 µs 
+ t_settle ≈ 1.05 µs
+ tsettling=tfinal−tstart
+	​
+
+ 𝑡𝑠𝑒𝑡𝑡𝑙𝑖𝑛𝑔=1.05µ𝑠−1.00µ𝑠
+  tsettling≈0.05µ𝑠 ≈50ns
+
+τ = RC = 55 ns
+
+The measured settling time from simulation closely matches the theoretical RC time constant.

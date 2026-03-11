@@ -1,0 +1,14 @@
+Design Specifications - 
+
+Technology : CMOS
+Supply Voltage : 3.3V
+Comparator Type : Dynamic Strong ARM
+Clock Frequency : 1 MHz
+
+Result - 
+| Parameter          |          Value               |
+|--------------------|------------------------------|
+| Supply Voltage     | 3.3 V                        |
+| Theoretical Delay  | 405 ps                       |
+| Simulated Delay    | 1.37 µs                      |
+| Comparator Type    | StrongARM Dynamic Comparator |

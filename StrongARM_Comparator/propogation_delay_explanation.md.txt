@@ -1,0 +1,117 @@
+### Comparator Propagation Delay Analysis
+
+Propagation delay is defined as the time required for the comparator output to resolve and transition to a valid logic level after the clock initiates the evaluation phase.
+
+Mathematically,
+
+td = t_output − t_clock
+
+where
+
+t_output = time at which output node switches
+t_clock = time at which clock triggers evaluation
+
+---
+
+### 1. Theoretical Propagation Delay
+
+The StrongARM comparator operates using regenerative positive feedback. The differential voltage between the output nodes grows exponentially according to
+
+Vd(t) = V0 e^(t/τ)
+
+where
+
+V0 = initial differential voltage
+τ = regeneration time constant
+
+The regeneration time constant is given by
+
+τ = CL / gm
+
+where
+
+CL = load capacitance
+gm = transconductance of the differential pair
+
+The propagation delay required for the output to reach logic level can be approximated as
+
+td = τ ln(Vlogic / V0)
+
+Assuming typical values
+
+Supply voltage
+
+Vlogic ≈ 3.3 V
+
+Initial differential input
+
+V0 ≈ 1 mV
+
+Typical regeneration constant
+
+τ ≈ 50 ps
+
+Substituting
+
+td = 50 ps × ln(3.3 / 0.001)
+
+ln(3300) ≈ 8.1
+
+Therefore
+
+td ≈ 405 ps
+
+Thus the theoretical propagation delay of the StrongARM comparator is approximately
+
+td_theoretical ≈ 0.4 ns
+
+---
+
+### 2. Propagation Delay from Simulation
+
+Propagation delay was measured from the transient waveform in LTspice.
+
+Measured times
+
+Clock transition
+
+t_clock = 3.496732 ms
+
+Comparator output transition
+
+t_output = 3.4980989 ms
+
+Propagation delay
+
+td = t_output − t_clock
+
+td = 3.4980989 ms − 3.496732 ms
+
+td = 0.0013669 ms
+
+Converting units
+
+td = 1.3669 µs
+td = 1366.9 ns
+
+Thus the propagation delay obtained from simulation is
+
+td_simulated ≈ 1.37 µs
+
+---
+
+### 3. Comparison
+
+| Parameter         | Value     |
+| ----------------- | --------- |
+| Theoretical Delay | ≈ 0.4 ns  |
+| Simulated Delay   | ≈ 1.37 µs |
+
+The simulated delay is higher due to practical circuit effects including
+
+• large output load capacitance
+• finite MOS switch resistance
+• parasitic capacitances in the circuit
+• non-ideal transistor transconductance
+
+These non-idealities increase the effective regeneration time constant and therefore increase the comparator decision delay.

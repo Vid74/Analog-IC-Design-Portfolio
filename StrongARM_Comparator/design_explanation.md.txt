@@ -1,0 +1,196 @@
+# StrongARM Dynamic Comparator
+
+## Design Specifications
+
+| Parameter         | Value                    |
+| ----------------- | ------------------------ |
+| Supply Voltage    | 3.3 V                    |
+| Input Common Mode | ~1.65 V                  |
+| Clock Frequency   | ~1 MHz                   |
+| Comparator Type   | Dynamic Latch Comparator |
+| Topology          | StrongARM Architecture   |
+
+The objective of this design is to implement a StrongARM dynamic comparator capable of high-speed differential voltage comparison with zero static power consumption.
+
+---
+
+## Architecture Overview
+
+The StrongARM comparator consists of the following blocks:
+
+1. Differential input pair
+2. Cross-coupled regenerative latch
+3. Clock-controlled tail transistor
+4. Precharge network
+
+This architecture is widely used in high-speed ADCs due to its low power consumption and high gain.
+
+---
+
+## Circuit Operation
+
+The comparator operates in two distinct phases controlled by the clock signal.
+
+### Reset Phase (CLK = 0)
+
+During reset the internal output nodes are precharged to VDD.
+
+PMOS precharge transistors charge both output nodes:
+
+Vout+ ≈ VDD
+Vout− ≈ VDD
+
+The tail transistor remains OFF, preventing current flow through the differential pair.
+
+---
+
+### Evaluation Phase (CLK = 1)
+
+When the clock goes high the tail transistor turns ON and the differential pair begins conducting.
+
+The drain currents of the differential pair depend on the input voltage difference.
+
+Id1 - Id2 ≈ gm (Vin+ − Vin−)
+
+This current difference creates a voltage difference across the internal nodes.
+
+The cross-coupled latch amplifies this difference exponentially.
+
+---
+
+## Regenerative Amplification
+
+The latch exhibits positive feedback.
+
+Voltage difference grows according to
+
+V(t) = V0 e^(t/τ)
+
+Where
+
+V0 = initial differential voltage
+τ = regeneration time constant
+
+Time constant:
+
+τ = CL / gm
+
+Where
+
+CL = load capacitance
+gm = transconductance of input pair
+
+---
+
+## Decision Mechanism
+
+Final output state is determined by the sign of the input voltage difference.
+
+If
+
+Vin+ > Vin−
+
+Then
+
+Vout+ → VDD
+Vout− → 0
+
+If
+
+Vin+ < Vin−
+
+Then
+
+Vout+ → 0
+Vout− → VDD
+
+---
+
+## Simulation Results
+
+The transient simulation demonstrates the comparator response to varying input signals.
+
+Observed behavior:
+
+The output switches rapidly between logic levels depending on the comparison between the input signal and the reference voltage.
+
+Typical regeneration time observed:
+
+≈ few nanoseconds depending on transistor sizing.
+
+---
+
+## Performance Metrics
+
+Important comparator performance parameters include
+
+Propagation Delay
+Input Referred Offset Voltage
+Kickback Noise
+Power Consumption
+
+### Propagation Delay
+
+Time required for the comparator to resolve the input difference and produce a valid digital output.
+
+Approximate delay
+
+td ≈ τ ln(Vlogic / Vinitial)
+
+---
+
+### Input Referred Offset
+
+Offset arises from mismatch in the differential pair.
+
+Approximate offset voltage
+
+Vos ≈ ΔVth / √(WL)
+
+Where
+
+ΔVth = threshold voltage mismatch
+
+---
+
+### Kickback Noise
+
+During regeneration internal nodes experience large voltage swings.
+
+This couples noise back to the input nodes through parasitic capacitances.
+
+---
+
+## Design Challenges
+
+### Metastability
+
+If the input voltage difference is extremely small the comparator takes longer to resolve.
+
+---
+
+### Device Mismatch
+
+Mismatch in transistor parameters introduces input offset.
+
+Common mitigation techniques:
+
+Large device dimensions
+Common centroid layout
+
+---
+
+### Clock Feedthrough
+
+Clock transitions couple into sensitive internal nodes and may affect decision accuracy.
+
+---
+
+## Possible Improvements
+
+Future improvements could include
+
+Offset cancellation techniques
+Differential input buffering
+Low kickback comparator topology
+Latch sizing optimization

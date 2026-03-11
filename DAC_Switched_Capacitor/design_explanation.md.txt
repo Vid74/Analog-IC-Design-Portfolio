@@ -1,0 +1,169 @@
+# Switched Capacitor DAC
+
+## Design Specifications
+
+| Parameter          | Value                                    |
+| ------------------ | ---------------------------------------- |
+| Supply Voltage     | 3.3 V                                    |
+| Reference Voltages | 1.85 V, 1.45 V                           |
+| Clock Frequency    | ~1 MHz                                   |
+| Load Resistance    | 1 kΩ                                     |
+| Load Capacitance   | 55 pF                                    |
+| Architecture       | Switched Capacitor Charge Redistribution |
+
+The objective of this design is to implement a switched-capacitor based digital-to-analog converter that converts a digital input signal into an analog voltage using charge redistribution techniques.
+
+---
+
+## Architecture Overview
+
+The DAC is implemented using MOS-based switching elements and capacitors controlled by non-overlapping clock phases.
+
+The architecture consists of:
+
+1. Digital input source
+2. Reference voltage network
+3. MOS transmission switches
+4. Charge redistribution node
+5. RC output smoothing network
+
+Two clock phases control the switching network:
+
+φ1 : sampling phase
+φ2 : charge redistribution phase
+
+---
+
+## Circuit Operation
+
+### Phase 1: Sampling Phase (φ1 active)
+
+During this phase the capacitor network samples the reference voltage.
+
+The capacitor is connected to either Vref_high or Vref_low depending on the digital input.
+
+The stored charge is given by
+
+Q = C × Vref
+
+---
+
+### Phase 2: Redistribution Phase (φ2 active)
+
+During φ2 the capacitor is disconnected from the reference node and connected to the output node.
+
+Charge sharing occurs between the capacitor network and the load capacitance.
+
+The resulting output voltage becomes
+
+Vout = (Σ CiVi) / (Σ Ci)
+
+where
+
+Ci = capacitor value
+Vi = voltage sampled during phase 1
+
+---
+
+## Output Filtering
+
+A passive RC network is used to smooth switching artifacts and produce a continuous analog waveform.
+
+R = 1 kΩ
+C = 55 pF
+
+Time constant:
+
+τ = RC
+τ = 1000 × 55pF
+τ ≈ 55 ns
+
+This filter attenuates high frequency switching components.
+
+---
+
+## Key Design Equations
+
+### Capacitor Charge
+
+Q = C × V
+
+### Charge Redistribution
+
+Vout = (C1V1 + C2V2 + ... + CnVn) / (C1 + C2 + ... + Cn)
+
+### Ideal DAC Transfer Function
+
+Vout = Vref × (D / 2^N)
+
+Where
+
+D = digital input value
+N = resolution
+
+---
+
+## Simulation Results
+
+The simulation shows the digital input waveform and the resulting analog output voltage.
+
+The output waveform exhibits step-like transitions corresponding to digital input changes.
+
+The RC filter smooths the waveform and produces a quasi-analog output.
+
+Observed output voltage range:
+
+Vout ≈ 1.45 V to 1.85 V
+
+---
+
+## Design Considerations
+
+### Charge Injection
+
+MOS switches inject channel charge during turn-off.
+
+Error magnitude is proportional to
+
+ΔV ≈ Qinj / Cload
+
+Where
+
+Qinj = injected charge
+Cload = output capacitance
+
+Mitigation strategies include complementary switching and larger load capacitance.
+
+---
+
+### Clock Feedthrough
+
+Gate-to-drain capacitance couples clock transitions into the output node.
+
+This can introduce transient spikes at the output.
+
+---
+
+### Capacitor Matching
+
+Mismatch between capacitors introduces nonlinearity.
+
+Important performance metrics include
+
+DNL (Differential Nonlinearity)
+INL (Integral Nonlinearity)
+
+Typical matching requirement:
+
+σ(C)/C < 0.1%
+
+---
+
+## Possible Improvements
+
+Future design improvements may include
+
+Binary-weighted capacitor array implementation
+Higher resolution DAC architecture
+Bootstrapped switches for improved linearity
+Differential DAC architecture
